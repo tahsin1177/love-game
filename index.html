@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" >
 <head>
   <meta charset="UTF-8" />
   <title>Do You Love Me?</title>
@@ -29,6 +29,7 @@
     .btn-container {
       display: inline-block;
       margin-top: 30px;
+      position: relative; /* to support position changes */
     }
 
     button {
@@ -157,15 +158,20 @@
     const finalMessage = document.getElementById("finalMessage");
     const heartsContainer = document.getElementById("hearts-container");
 
+    // Store original No button position (relative to container)
+    function resetNoPosition() {
+      noBtn.style.position = "relative";
+      noBtn.style.left = "0";
+      noBtn.style.top = "0";
+    }
+
     yesBtn.addEventListener("click", () => {
       current++;
       if (current < questions.length) {
         questionEl.textContent = questions[current];
 
-        // Reset No button position to default (remove inline styles)
-        noBtn.style.position = "relative";
-        noBtn.style.left = "";
-        noBtn.style.top = "";
+        // Reset No button to original position
+        resetNoPosition();
       } else {
         questionEl.style.display = "none";
         yesBtn.style.display = "none";
@@ -178,13 +184,20 @@
     });
 
     noBtn.addEventListener("mouseover", () => {
+      // Calculate random position on screen for No button to jump to
       const btnWidth = noBtn.offsetWidth;
       const btnHeight = noBtn.offsetHeight;
       const x = Math.random() * (window.innerWidth - btnWidth);
       const y = Math.random() * (window.innerHeight - btnHeight);
-      noBtn.style.position = "fixed"; // temporarily fix position to jump
+
+      noBtn.style.position = "fixed";
       noBtn.style.left = x + "px";
       noBtn.style.top = y + "px";
+    });
+
+    noBtn.addEventListener("mouseout", () => {
+      // When mouse leaves No button, reset it back next to Yes
+      resetNoPosition();
     });
 
     function createHeart() {
@@ -207,3 +220,4 @@
   </script>
 </body>
 </html>
+

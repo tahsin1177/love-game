@@ -45,6 +45,7 @@
       gap: 30px;
       flex-wrap: wrap;
       margin-top: 30px;
+      position: relative;
     }
 
     button {
@@ -54,7 +55,6 @@
       border-radius: 40px;
       cursor: pointer;
       transition: all 0.3s ease;
-      position: relative;
       box-shadow: 0 0 15px rgba(255, 105, 180, 0.4);
       z-index: 2;
     }
@@ -67,11 +67,11 @@
     #noBtn {
       background-color: #fff0f5;
       color: #ff1493;
-      position: relative;
+      transform: translate(0, 0);
     }
 
     #noBtn:hover {
-      transform: scale(1.1) rotate(3deg);
+      transform: scale(1.1);
     }
 
     #finalMessage {
@@ -190,17 +190,13 @@
     noBtn.addEventListener("mouseover", () => {
       if (movedThisQuestion) return;
       movedThisQuestion = true;
-      const x = Math.random() * (window.innerWidth - 100);
-      const y = Math.random() * (window.innerHeight - 100);
-      noBtn.style.position = "absolute";
-      noBtn.style.left = `${x}px`;
-      noBtn.style.top = `${y}px`;
+      const x = Math.random() * 200 - 100;
+      const y = Math.random() * 100 - 50;
+      noBtn.style.transform = `translate(${x}px, ${y}px)`;
     });
 
     function resetNoBtn() {
-      noBtn.style.position = "relative";
-      noBtn.style.left = "0";
-      noBtn.style.top = "0";
+      noBtn.style.transform = "translate(0, 0)";
     }
 
     function dropHearts() {

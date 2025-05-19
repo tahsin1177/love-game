@@ -3,73 +3,89 @@
 <head>
   <meta charset="UTF-8" />
   <title>Do You Love Me?</title>
+  <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Baloo+2&display=swap" rel="stylesheet">
   <style>
     body {
-      background: linear-gradient(to right, #ffb6c1, #ffc0cb);
-      font-family: 'Segoe UI', sans-serif;
+      background: radial-gradient(circle at top, #fff0f5, #ffe4e1);
+      font-family: 'Baloo 2', cursive;
       text-align: center;
       padding-top: 100px;
       color: #990000;
       overflow: hidden;
+      position: relative;
     }
 
     h1 {
+      font-family: 'Pacifico', cursive;
       font-size: 3.5em;
       margin-bottom: 40px;
       min-height: 100px;
-      color: #990000;
-      text-shadow: 1px 1px 3px rgba(255, 255, 255, 0.7);
-      background: rgba(255, 182, 193, 0.4);
-      display: inline-block;
-      padding: 20px 40px;
-      border-radius: 30px;
-      box-shadow: 0 0 15px rgba(255, 105, 180, 0.4);
+      color: #ff1493;
+      text-shadow: 2px 2px 8px white, 0 0 10px hotpink;
+      background: rgba(255, 182, 193, 0.3);
+      padding: 25px 40px;
+      border-radius: 40px;
+      box-shadow: 0 0 20px rgba(255, 105, 180, 0.5);
+      animation: pulse 3s infinite;
     }
 
     .btn-container {
       display: flex;
       justify-content: center;
-      gap: 20px;
+      gap: 40px;
       margin-top: 30px;
-    }
-
-    button {
-      padding: 20px 40px;
-      font-size: 1.5em;
-      border: none;
-      border-radius: 30px;
-      cursor: pointer;
-      transition: all 0.3s ease;
       position: relative;
     }
 
+    button {
+      padding: 20px 50px;
+      font-size: 1.8em;
+      border: none;
+      border-radius: 50px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      position: absolute;
+      box-shadow: 0 0 20px rgba(255, 105, 180, 0.5);
+      animation: float 3s ease-in-out infinite;
+    }
+
     #yesBtn {
-      background-color: #ff4d4d;
+      background-color: #ff69b4;
       color: white;
+      left: 50%;
+      transform: translateX(-130px);
     }
 
     #noBtn {
-      background-color: #ffe6e6;
-      color: #ff4d4d;
+      background-color: #fff0f5;
+      color: #ff1493;
+      left: 50%;
+      transform: translateX(50px);
     }
 
     #finalMessage {
       display: none;
-      font-size: 2em;
-      margin-top: 50px;
-      color: #cc0000;
+      font-size: 2.5em;
+      margin-top: 80px;
+      color: #d1006d;
       animation: fadeIn 2s ease-in-out forwards;
+      text-shadow: 1px 1px 8px hotpink;
     }
 
     @keyframes fadeIn {
-      from {
-        opacity: 0;
-        transform: scale(0.8);
-      }
-      to {
-        opacity: 1;
-        transform: scale(1);
-      }
+      from { opacity: 0; transform: scale(0.8); }
+      to { opacity: 1; transform: scale(1); }
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+    }
+
+    @keyframes float {
+      0% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+      100% { transform: translateY(0); }
     }
 
     #hearts-container {
@@ -79,14 +95,14 @@
       left: 0;
       width: 100vw;
       height: 100vh;
-      z-index: 1000;
+      z-index: 999;
     }
 
     .heart {
       position: absolute;
-      background-color: #ff4d4d;
+      background-color: #ff69b4;
       transform: rotate(-45deg);
-      animation: fall 5s linear forwards;
+      animation: fall 6s linear forwards;
       opacity: 0.8;
     }
 
@@ -96,7 +112,7 @@
       position: absolute;
       width: 20px;
       height: 20px;
-      background-color: #ff4d4d;
+      background-color: #ff69b4;
       border-radius: 50%;
     }
 
@@ -117,6 +133,48 @@
       }
       to {
         transform: translateY(100vh) rotate(-45deg);
+        opacity: 0;
+      }
+    }
+
+    /* Background Floating Hearts */
+    .decor-heart {
+      position: absolute;
+      width: 30px;
+      height: 30px;
+      background-color: #ffb6c1;
+      transform: rotate(-45deg);
+      opacity: 0.4;
+      animation: floatDecor 10s infinite linear;
+    }
+
+    .decor-heart::before,
+    .decor-heart::after {
+      content: "";
+      position: absolute;
+      width: 30px;
+      height: 30px;
+      background-color: #ffb6c1;
+      border-radius: 50%;
+    }
+
+    .decor-heart::before {
+      top: -15px;
+      left: 0;
+    }
+
+    .decor-heart::after {
+      left: 15px;
+      top: 0;
+    }
+
+    @keyframes floatDecor {
+      0% {
+        transform: translateY(0) rotate(-45deg);
+        opacity: 0.3;
+      }
+      100% {
+        transform: translateY(-100vh) rotate(-45deg);
         opacity: 0;
       }
     }
@@ -143,35 +201,58 @@
     ];
 
     let current = 0;
+    let movedThisQuestion = false;
+
     const questionEl = document.getElementById("question");
     const yesBtn = document.getElementById("yesBtn");
     const noBtn = document.getElementById("noBtn");
     const finalMessage = document.getElementById("finalMessage");
     const heartsContainer = document.getElementById("hearts-container");
 
+    // Spawn background decor
+    for (let i = 0; i < 60; i++) {
+      const decor = document.createElement("div");
+      decor.className = "decor-heart";
+      decor.style.left = Math.random() * 100 + "vw";
+      decor.style.top = Math.random() * 100 + "vh";
+      decor.style.animationDuration = 5 + Math.random() * 15 + "s";
+      decor.style.width = decor.style.height = 10 + Math.random() * 20 + "px";
+      decor.style.opacity = 0.2 + Math.random() * 0.4;
+      document.body.appendChild(decor);
+    }
+
     yesBtn.addEventListener("click", () => {
       current++;
+      movedThisQuestion = false;
+
       if (current < questions.length) {
         questionEl.textContent = questions[current];
-        noBtn.style.transform = "translate(0, 0)";
+        noBtn.style.top = "";
+        noBtn.style.left = "50%";
+        noBtn.style.transform = "translateX(50px)";
       } else {
         questionEl.style.display = "none";
         yesBtn.style.display = "none";
         noBtn.style.display = "none";
         finalMessage.style.display = "block";
 
-        const interval = setInterval(createHeart, 100);
+        const interval = setInterval(createHeart, 70);
         setTimeout(() => clearInterval(interval), 10000);
       }
     });
 
     noBtn.addEventListener("mouseenter", () => {
-      const x = (Math.random() - 0.5) * 500; // random -250 to +250
-      const y = (Math.random() - 0.5) * 300; // random -150 to +150
-      noBtn.style.transform = `translate(${x}px, ${y}px)`;
-    });
+      if (movedThisQuestion) return;
+      movedThisQuestion = true;
 
-    noBtn.addEventListener("mouseleave", () => {
+      const maxX = window.innerWidth - 150;
+      const maxY = window.innerHeight - 150;
+
+      const randX = Math.random() * maxX;
+      const randY = Math.random() * maxY;
+
+      noBtn.style.left = randX + "px";
+      noBtn.style.top = randY + "px";
       noBtn.style.transform = "translate(0, 0)";
     });
 
@@ -186,7 +267,6 @@
       heart.style.animationDuration = 3 + Math.random() * 3 + "s";
 
       heartsContainer.appendChild(heart);
-
       heart.addEventListener("animationend", () => {
         heart.remove();
       });
@@ -194,4 +274,5 @@
   </script>
 </body>
 </html>
+
 

@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Do You Love Me?</title>
+  <style>
+    body {
+      background: linear-gradient(to right, #ffb6c1, #ffc0cb);
+      font-family: 'Segoe UI', sans-serif;
+      text-align: center;
+      padding-top: 100px;
+      color: #990000;
+      overflow: hidden;
+    }
+
+    h1 {
+      font-size: 2.5em;
+      margin-bottom: 30px;
+      min-height: 80px;
+    }
+
+    .btn-container {
+      position: relative;
+      height: 100px;
+    }
+
+    button {
+      padding: 15px 30px;
+      font-size: 1.2em;
+      margin: 10px;
+      border: none;
+      border-radius: 30px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      position: relative;
+    }
+
+    #yesBtn {
+      background-color: #ff4d4d;
+      color: white;
+    }
+
+    #noBtn {
+      background-color: #ffe6e6;
+      color: #ff4d4d;
+      position: absolute;
+      left: 0;
+      top: 0;
+    }
+
+    #finalMessage {
+      display: none;
+      font-size: 2em;
+      margin-top: 50px;
+      color: #cc0000;
+      animation: fadeIn 2s ease-in-out forwards;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: scale(0.8);
+      }
+      to {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+
+    /* Hearts container */
+    #hearts-container {
+      pointer-events: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      overflow: visible;
+      z-index: 1000;
+    }
+
+    .heart {
+      position: absolute;
+      background-color: #ff4d4d;
+      transform: rotate(-45deg);
+      animation-name: fall;
+      animation-timing-function: linear;
+      animation-iteration-count: 1;
+      animation-fill-mode: forwards;
+      opacity: 0.8;
+      filter: drop-shadow(0 0 2px #cc0000);
+    }
+
+    .heart::before,
+    .heart::after {
+      content: "";
+      position: absolute;
+      width: 20px;
+      height: 20px;
+      background-color: #ff4d4d;
+      border-radius: 50%;
+    }
+    .heart::before {
+      top: -10px;
+      left: 0;
+    }
+    .heart::after {
+      left: 10px;
+      top: 0;
+    }
+
+    @keyframes fall {
+      0% {
+        transform: translateY(-30px) rotate(-45deg);
+        opacity: 1;
+      }
+      100% {
+        transform: translateY(110vh) rotate(-45deg);
+        opacity: 0;
+      }
+    }
+  </style>
+</head>
+<body>
+  <h1 id="question">Do you love me? 💖</h1>
+
+  <div class="btn-container">
+    <button id="yesBtn">Yes</button>
+    <button id="noBtn">No</button>
+  </div>
+
+  <div id="finalMessage">I knew it! 💘 You're mine forever! 😍</div>
+
+  <div id="hearts-container"></div>
+
+  <script>
+    const questions = [
+      "Do you love me? 💖",
+      "Will you always be with me? 🌹",
+      "Am I the cutest to you? 🥺",
+      "Do you want to spend forever with me? 💍",
+      "Will you be mine forever? ❤️",
+    ];
+
+    let current = 0;
+
+    const questionEl = document.getElementById("question");
+    const yesBtn = document.getElementById("yesBtn");
+    const noBtn = document.getElementById("noBtn");
+    const finalMessage = document.getElementById("finalMessage");
+    const heartsContainer = document.getElementById("hearts-container");
+
+    // Store original position of No button
+    const originalLeft = noBtn.style.left || "0px";
+    const originalTop = noBtn.style.top || "0px";
+
+    yesBtn.addEventListener("click", () => {
+      current++;
+      if (current < questions.length) {
+        questionEl.textContent = questions[current];
+
+        // Reset No button position
+        noBtn.style.left = originalLeft;
+        noBtn.style.top = originalTop;
+      } else {
+        questionEl.style.display = "none";
+        yesBtn.style.display = "none";
+        noBtn.style.display = "none";
+        finalMessage.style.display = "block";
+
+        // Spawn hearts
+        const interval = setInterval(createHeart, 100); // every 100ms
+        setTimeout(() => clearInterval(interval), 10000); // stop after 10s
+      }
+    });
+
+    noBtn.addEventListener("mouseover", () => {
+      const btnWidth = noBtn.offsetWidth;
+      const btnHeight = noBtn.offsetHeight;
+      const x = Math.random() * (window.innerWidth - btnWidth);
+      const y = Math.random() * (window.innerHeight - btnHeight);
+      noBtn.style.left = x + "px";
+      noBtn.style.top = y + "px";
+    });
+
+    function createHeart() {
+      const heart = document.createElement("div");
+      heart.classList.add("heart");
+      heart.style.left = Math.random() * window.innerWidth + "px";
+
+      const size = 10 + Math.random() * 20;
+      heart.style.width = size + "px";
+      heart.style.height = size + "px";
+
+      heart.style.animationDuration = 3 + Math.random() * 4 + "s";
+
+      heartsContainer.appendChild(heart);
+
+      heart.addEventListener("animationend", () => {
+        heart.remove();
+      });
+    }
+  </script>
+</body>
+</html>

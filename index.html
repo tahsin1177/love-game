@@ -14,20 +14,27 @@
     }
 
     h1 {
-      font-size: 2.5em;
-      margin-bottom: 30px;
-      min-height: 80px;
+      font-size: 3.5em;
+      margin-bottom: 40px;
+      min-height: 100px;
+      color: #990000;
+      text-shadow: 1px 1px 3px rgba(255, 255, 255, 0.7);
+      background: rgba(255, 182, 193, 0.4);
+      display: inline-block;
+      padding: 20px 40px;
+      border-radius: 30px;
+      box-shadow: 0 0 15px rgba(255, 105, 180, 0.4);
     }
 
     .btn-container {
-      position: relative;
-      height: 100px;
+      display: inline-block;
+      margin-top: 30px;
     }
 
     button {
-      padding: 15px 30px;
-      font-size: 1.2em;
-      margin: 10px;
+      padding: 20px 40px;
+      font-size: 1.5em;
+      margin: 0 15px;
       border: none;
       border-radius: 30px;
       cursor: pointer;
@@ -43,7 +50,7 @@
     #noBtn {
       background-color: #ffe6e6;
       color: #ff4d4d;
-      position: absolute;
+      position: relative;
       left: 0;
       top: 0;
     }
@@ -150,27 +157,23 @@
     const finalMessage = document.getElementById("finalMessage");
     const heartsContainer = document.getElementById("hearts-container");
 
-    // Store original position of No button
-    const originalLeft = noBtn.style.left || "0px";
-    const originalTop = noBtn.style.top || "0px";
-
     yesBtn.addEventListener("click", () => {
       current++;
       if (current < questions.length) {
         questionEl.textContent = questions[current];
 
-        // Reset No button position
-        noBtn.style.left = originalLeft;
-        noBtn.style.top = originalTop;
+        // Reset No button position to default (remove inline styles)
+        noBtn.style.position = "relative";
+        noBtn.style.left = "";
+        noBtn.style.top = "";
       } else {
         questionEl.style.display = "none";
         yesBtn.style.display = "none";
         noBtn.style.display = "none";
         finalMessage.style.display = "block";
 
-        // Spawn hearts
-        const interval = setInterval(createHeart, 100); // every 100ms
-        setTimeout(() => clearInterval(interval), 10000); // stop after 10s
+        const interval = setInterval(createHeart, 100);
+        setTimeout(() => clearInterval(interval), 10000);
       }
     });
 
@@ -179,6 +182,7 @@
       const btnHeight = noBtn.offsetHeight;
       const x = Math.random() * (window.innerWidth - btnWidth);
       const y = Math.random() * (window.innerHeight - btnHeight);
+      noBtn.style.position = "fixed"; // temporarily fix position to jump
       noBtn.style.left = x + "px";
       noBtn.style.top = y + "px";
     });

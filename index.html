@@ -27,7 +27,7 @@
 
     h1 {
       font-family: 'Pacifico', cursive;
-      font-size: 2.5em;
+      font-size: 2.8em;
       color: #d63384;
       text-shadow: 2px 2px 5px #fff;
       margin-bottom: 40px;
@@ -50,17 +50,17 @@
       flex-wrap: wrap;
       margin-top: 30px;
       position: relative;
+      z-index: 2;
     }
 
     button {
       padding: 15px 35px;
-      font-size: 1.4em;
+      font-size: 1.5em;
       border: none;
       border-radius: 40px;
       cursor: pointer;
       transition: all 0.3s ease;
       box-shadow: 0 0 15px rgba(255, 105, 180, 0.4);
-      z-index: 2;
       position: relative;
     }
 
@@ -72,30 +72,35 @@
     #noBtn {
       background-color: #fff0f5;
       color: #ff1493;
-      /* remove fixed position here; we'll assign on click */
-    }
-
-    #noBtn:hover {
-      transform: scale(1.1);
     }
 
     #finalMessage {
       display: none;
-      font-size: 2em;
+      font-size: 2.2em;
       color: #c2185b;
       margin-top: 50px;
       animation: fadeIn 2s ease-in-out forwards;
+      z-index: 3;
+    }
+
+    #wrongAnswerMsg {
+      display: none;
+      font-size: 1.8em;
+      color: #b30000;
+      margin-top: 30px;
+      animation: shake 0.3s infinite alternate;
+      z-index: 3;
+      position: relative;
+    }
+
+    @keyframes shake {
+      from { transform: translateX(-5px); }
+      to { transform: translateX(5px); }
     }
 
     @keyframes fadeIn {
-      from {
-        opacity: 0;
-        transform: scale(0.8);
-      }
-      to {
-        opacity: 1;
-        transform: scale(1);
-      }
+      from { opacity: 0; transform: scale(0.8); }
+      to { opacity: 1; transform: scale(1); }
     }
 
     .floating-heart {
@@ -125,6 +130,7 @@
       transform: rotate(-45deg);
       animation: fall 6s linear infinite;
       position: absolute;
+      z-index: 0;
     }
 
     .heart::before,
@@ -162,6 +168,7 @@
       h1 {
         font-size: 2em;
       }
+
       button {
         font-size: 1.2em;
         padding: 12px 28px;
@@ -178,6 +185,7 @@
   </div>
 
   <div id="finalMessage">I knew it! 💘 You're mine forever! 😍</div>
+  <div id="wrongAnswerMsg">OH NO WRONG ANSWER 🔪🔪</div>
 
   <script>
     const questions = [
@@ -193,6 +201,7 @@
     const yesBtn = document.getElementById("yesBtn");
     const noBtn = document.getElementById("noBtn");
     const finalMessage = document.getElementById("finalMessage");
+    const wrongAnswerMsg = document.getElementById("wrongAnswerMsg");
     const root = document.documentElement;
 
     let current = 0;
@@ -214,6 +223,7 @@
     });
 
     noBtn.addEventListener("click", () => {
+      // Move to new random position
       const btnWidth = noBtn.offsetWidth;
       const btnHeight = noBtn.offsetHeight;
       const maxX = window.innerWidth - btnWidth - 20;
@@ -225,6 +235,12 @@
       noBtn.style.position = "fixed";
       noBtn.style.left = x + "px";
       noBtn.style.top = y + "px";
+
+      // Show "WRONG ANSWER" message
+      wrongAnswerMsg.style.display = "block";
+      setTimeout(() => {
+        wrongAnswerMsg.style.display = "none";
+      }, 2000);
     });
 
     function resetNoBtn() {
@@ -259,7 +275,6 @@
       setTimeout(() => heartEl.remove(), 10000);
     }
 
-    // Start floating hearts continuously
     setInterval(createFloatingHeart, 300);
   </script>
 </body>
